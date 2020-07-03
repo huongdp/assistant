@@ -1,0 +1,59 @@
+http:
+  routers:
+    api:
+      rule: "Host(`traefik.home.local`)"
+      entryPoints:
+        - websecure
+      middlewares:
+        - auth-users
+      service: "api@internal"
+      tls:
+        options: default
+
+    metrics:
+      rule: "Host(`traefik.home.local`) && PathPrefix(`/metrics`)"
+      entryPoints:
+        - websecure
+      service: "prometheus@internal"
+      tls:
+        options: default
+
+  middlewares:
+    secured:
+      chain:
+        middlewares:
+          - https-only
+          - auth-users
+
+    https-only:
+      redirectScheme:
+        scheme: https
+        permanent: true
+
+    auth-users:
+      basicAuth:
+        users:
+          - "test:$apr1$H6uskkkW$IgXLP6ewTrSuBkTrqE8wj/"
+
+    testHeader:
+      headers:
+        customRequestHeaders:
+          X-Script-Name: "test"
+        customResponseHeaders:
+          X-Custom-Response-Header: "value"
+
+tls:
+  certificates:
+    - certFile: "/certs/server.cert"
+      keyFile: "/certs/server.key"
+      stores:
+        - default
+  stores:
+    default:
+      defaultCertificate:
+        certFile: "/certs/server.cert"
+        keyFile: "/certs/server.key"
+
+  options:
+    default:
+      sniStrict: false
