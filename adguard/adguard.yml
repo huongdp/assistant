@@ -1,0 +1,30 @@
+version: '3.7'
+
+services:
+  adguard:
+    image: adguard/adguardhome
+    restart: always
+    volumes:
+      - ./adguardhome/work:/opt/adguardhome/work
+      - ./adguardhome/conf:/opt/adguardhome/conf
+    networks:
+      - traefik_proxy
+    ports:
+      - 53:53/tcp
+      - 53:53/udp 
+      - 67:67/udp 
+      - 68:68/tcp 
+      - 68:68/udp 
+      - 853:853/tcp 
+      - 3000:3000/tcp
+
+    labels:
+      - traefik.docker.network=traefik_proxy
+      - traefik.http.routers.adguard.tls=true
+      - traefik.http.routers.adguard.rule=Host(`adguard.home.local`)
+      - traefik.http.services.adguard.loadbalancer.server.port=3000
+
+networks:
+  traefik_proxy:
+    external:
+      name: traefik_proxy

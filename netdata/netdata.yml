@@ -1,0 +1,22 @@
+version: '3.7'
+
+services:
+  netdata:
+    image: netdata/netdata:latest-aarch64
+    restart: always
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - traefik_proxy
+    labels:
+      - traefik.docker.network=traefik_proxy
+      - traefik.http.routers.netdata.tls=true
+      - traefik.http.routers.netdata.rule=Host(`netdata.home.local`)
+      - traefik.http.services.netdata.loadbalancer.server.port=19999
+
+networks:
+  traefik_proxy:
+    external:
+      name: traefik_proxy
