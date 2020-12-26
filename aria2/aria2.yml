@@ -20,7 +20,6 @@ services:
       - ${PWD}/config:/config
       - ${PWD}/downloads:/downloads
     ports:
-      - 6800:6800
       - 6888:6888
       - 6888:6888/udp
     restart: unless-stopped
@@ -30,6 +29,12 @@ services:
         max-size: 1m
     networks:
       - traefik_proxy    
+    labels:
+      - traefik.docker.network=traefik_proxy
+      - traefik.http.routers.aria2.tls=true
+      - traefik.http.routers.aria2.entrypoints=websecure
+      - traefik.http.routers.aria2.rule=Host(`aria2.home.local`)
+      - traefik.http.services.aria2.loadbalancer.server.port=6800
 
   ariang:
     container_name: ariang
