@@ -2,8 +2,9 @@ version: "3.8"
 
 services:
   aria2-pro:
-    container_name: aria2-pro
     image: p3terx/aria2-pro
+    container_name: home-aria2
+    hostname: home-aria2
     environment:
       - PUID=65534
       - PGID=65534
@@ -37,9 +38,9 @@ services:
       - traefik.http.services.aria2.loadbalancer.server.port=6800
 
   ariang:
-    container_name: ariang
     image: p3terx/ariang
-    network_mode: bridge
+    container_name: home-ariang
+    hostname: home-ariang
     restart: unless-stopped
     logging:
       driver: json-file

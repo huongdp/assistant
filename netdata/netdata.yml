@@ -3,6 +3,8 @@ version: '3.7'
 services:
   netdata:
     image: netdata/netdata:latest-aarch64
+    container_name: home-netdata
+    hostname: home-netdata
     restart: always
     volumes:
       - /proc:/host/proc:ro

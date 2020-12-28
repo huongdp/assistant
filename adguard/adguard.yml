@@ -3,6 +3,8 @@ version: '3.7'
 services:
   adguard:
     image: adguard/adguardhome
+    container_name: home-adguard
+    hostname: home-adguard
     restart: always
     volumes:
       - ./adguardhome/work:/opt/adguardhome/work
@@ -16,7 +18,6 @@ services:
       - 68:68/tcp 
       - 68:68/udp 
       - 853:853/tcp 
-      - 3000:3000/tcp
 
     labels:
       - traefik.docker.network=traefik_proxy
